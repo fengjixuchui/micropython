@@ -3,7 +3,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2013, 2014 Damien P. George
+ * Copyright (c) 2016 Damien P. George
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,27 +23,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#ifndef MICROPY_INCLUDED_LIB_MP_READLINE_READLINE_H
-#define MICROPY_INCLUDED_LIB_MP_READLINE_READLINE_H
 
-#define CHAR_CTRL_A (1)
-#define CHAR_CTRL_B (2)
-#define CHAR_CTRL_C (3)
-#define CHAR_CTRL_D (4)
-#define CHAR_CTRL_E (5)
-#define CHAR_CTRL_F (6)
-#define CHAR_CTRL_K (11)
-#define CHAR_CTRL_N (14)
-#define CHAR_CTRL_P (16)
-#define CHAR_CTRL_U (21)
-#define CHAR_CTRL_W (23)
+// This config is mostly used to ensure that the nan-boxing object model
+// continues to build (i.e. catches usage of mp_obj_t that don't work with
+// this representation).
 
-void readline_init0(void);
-int readline(vstr_t *line, const char *prompt);
-void readline_push_history(const char *line);
+// select nan-boxing object model
+#define MICROPY_OBJ_REPR (MICROPY_OBJ_REPR_D)
 
-void readline_init(vstr_t *line, const char *prompt);
-void readline_note_newline(const char *prompt);
-int readline_process_char(int c);
+// native emitters don't work with nan-boxing
+#define MICROPY_EMIT_X86 (0)
+#define MICROPY_EMIT_X64 (0)
+#define MICROPY_EMIT_THUMB (0)
+#define MICROPY_EMIT_ARM (0)
 
-#endif // MICROPY_INCLUDED_LIB_MP_READLINE_READLINE_H
+#include <stdint.h>
+
+typedef int64_t mp_int_t;
+typedef uint64_t mp_uint_t;
+#define UINT_FMT "%llu"
+#define INT_FMT "%lld"
